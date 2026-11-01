@@ -6,9 +6,9 @@ import { audit } from '../repositories/audit.repository.js';
 import { fail } from '../utils/errors.js';
 import { hashPassword } from '../utils/password.js';
 import { need, toEmployeeId } from '../utils/validators.js';
-import { PERMISSIONS as P } from '../../../shared/permissions';
-import { ROLES } from '../../../shared/roles';
-import { todayStr } from '../../../shared/dates';
+import { PERMISSIONS as P } from '../shared/permissions';
+import { ROLES } from '../shared/roles';
+import { todayStr } from '../shared/dates';
 
 const designationName = (conn, id) => lookupName(conn, 'designations', 'designation_id', 'designation_name', id);
 const departmentName = (conn, id) => lookupName(conn, 'departments', 'department_id', 'department_name', id);

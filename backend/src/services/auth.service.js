@@ -3,7 +3,7 @@
 import { findUserById, findUserByLogin, updatePasswordHash } from '../repositories/user.repository.js';
 import { hashPassword, isBcrypt, verifyPassword } from '../utils/password.js';
 import { signToken, verifyToken } from '../utils/token.js';
-import { roleFromDb } from '../../../shared/roles';
+import { roleFromDb } from '../shared/roles';
 
 export const toSessionUser = (row) => ({
   userId: row.user_id,

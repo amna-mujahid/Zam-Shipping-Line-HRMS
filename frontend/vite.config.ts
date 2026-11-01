@@ -11,7 +11,7 @@ export default defineConfig(() => ({
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
-      '@shared': path.resolve(import.meta.dirname, '../shared'),
+      '@shared': path.resolve(import.meta.dirname, 'src/shared'),
     },
   },
   server: {

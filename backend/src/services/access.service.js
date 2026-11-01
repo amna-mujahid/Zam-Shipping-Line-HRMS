@@ -4,8 +4,8 @@ import { audit } from '../repositories/audit.repository.js';
 import { fail } from '../utils/errors.js';
 import { hashPassword } from '../utils/password.js';
 import { need, toEmployeeId } from '../utils/validators.js';
-import { PERMISSIONS as P } from '../../../shared/permissions';
-import { ROLES } from '../../../shared/roles';
+import { PERMISSIONS as P } from '../shared/permissions';
+import { ROLES } from '../shared/roles';
 
 export async function setEmployeeRole(conn, user, empId, appRole) {
   need(user, P.ACCESS_CONTROL);

@@ -10,8 +10,8 @@ import { AUTO_METHOD, insertIgnoreAttendanceRows, loadAttendance } from '../repo
 import { loadLeaves } from '../repositories/leave.repository.js';
 import { audit } from '../repositories/audit.repository.js';
 import { engineCtx } from '../utils/attendanceEngine.js';
-import { computeDay } from '../../../shared/attendance';
-import { addDays, todayStr } from '../../../shared/dates';
+import { computeDay } from '../shared/attendance';
+import { addDays, todayStr } from '../shared/dates';
 
 export const autoMarkAbsent = async () => {
   const days = env.autoAbsentDays;

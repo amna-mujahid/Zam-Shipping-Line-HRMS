@@ -9,10 +9,10 @@ import { audit } from '../repositories/audit.repository.js';
 import { engineCtx } from '../utils/attendanceEngine.js';
 import { fail } from '../utils/errors.js';
 import { checkDate, need } from '../utils/validators.js';
-import { PERMISSIONS as P } from '../../../shared/permissions';
-import { DB_STATUS, findHoliday, isOffDay } from '../../../shared/attendance';
-import { countWorkingDays, leaveBalancesFor } from '../../../shared/leave';
-import { dateRange, todayStr } from '../../../shared/dates';
+import { PERMISSIONS as P } from '../shared/permissions';
+import { DB_STATUS, findHoliday, isOffDay } from '../shared/attendance';
+import { countWorkingDays, leaveBalancesFor } from '../shared/leave';
+import { dateRange, todayStr } from '../shared/dates';
 
 export async function submitLeave(conn, user, { leaveTypeId, fromDate, toDate, reason } = {}) {
   need(user, P.LEAVE_SELF);

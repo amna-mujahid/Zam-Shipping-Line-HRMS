@@ -9,8 +9,8 @@ import { dbStatusForPunches } from '../utils/attendanceEngine.js';
 import { fail } from '../utils/errors.js';
 import { hm, nullIfEmpty } from '../utils/format.js';
 import { checkDate, checkTime, need } from '../utils/validators.js';
-import { PERMISSIONS as P } from '../../../shared/permissions';
-import { todayStr } from '../../../shared/dates';
+import { PERMISSIONS as P } from '../shared/permissions';
+import { todayStr } from '../shared/dates';
 
 export async function submitRegularization(conn, user, { date, requestedIn, requestedOut, reason } = {}) {
   need(user, P.REGULARIZE_REQUEST);

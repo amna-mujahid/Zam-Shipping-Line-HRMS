@@ -3,7 +3,7 @@ import { pool } from '../config/database.js';
 import { fail } from '../utils/errors.js';
 import { nullIfEmpty, str } from '../utils/format.js';
 import { checkDate } from '../utils/validators.js';
-import { roleFromDb, ROLES } from '../../../shared/roles';
+import { roleFromDb, ROLES } from '../shared/roles';
 
 const EMPLOYEE_SQL = `
   select e.*, d.department_name, g.designation_name, g.schedule_id,

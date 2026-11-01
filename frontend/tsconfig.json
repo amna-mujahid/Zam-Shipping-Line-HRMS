@@ -20,14 +20,13 @@
     "jsx": "react-jsx",
     "paths": {
       "@shared/*": [
-        "../shared/*"
+        "./src/shared/*"
       ]
     },
     "allowImportingTsExtensions": true,
     "noEmit": true
   },
   "include": [
-    "src",
-    "../shared"
+    "src"
   ]
 }

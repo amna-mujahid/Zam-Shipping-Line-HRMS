@@ -8,8 +8,8 @@ import { loadLeaves } from '../repositories/leave.repository.js';
 import { loadPayrollRuns, loadPayrollSettings } from '../repositories/payroll.repository.js';
 import { loadPolicyAcks } from '../repositories/policy.repository.js';
 import { loadAuditLogs } from '../repositories/audit.repository.js';
-import { ROLES } from '../../../shared/roles';
-import { monthKeyOf, periodStart, shiftMonth, todayStr } from '../../../shared/dates';
+import { ROLES } from '../shared/roles';
+import { monthKeyOf, periodStart, shiftMonth, todayStr } from '../shared/dates';
 
 // Attendance history sent to the browser: the current pay period plus the previous six.
 export const historyStart = () => periodStart(shiftMonth(monthKeyOf(todayStr()), -6));

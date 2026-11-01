@@ -1,8 +1,8 @@
 // Lookup data: departments, designations, schedules, leave types, holidays, calendar, roles.
 import { pool } from '../config/database.js';
 import { hm } from '../utils/format.js';
-import { roleFromDb } from '../../../shared/roles';
-import { isWeekend, timeToMin } from '../../../shared/dates';
+import { roleFromDb } from '../shared/roles';
+import { isWeekend, timeToMin } from '../shared/dates';
 
 export const shiftFromSchedule = (s) => {
   const start = hm(s.reporting_time);

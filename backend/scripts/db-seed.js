@@ -8,7 +8,7 @@ import { dbConfig } from '../src/config/database.js';
 
 const sqlFile = (name) => path.resolve(import.meta.dirname, '../../database', name);
 import { retryDeferred, runSqlFile } from './sql-runner.js';
-import { addDays, minToTime, monthKeyOf, shiftMonth, timeToMin, todayStr } from '../../shared/dates';
+import { addDays, minToTime, monthKeyOf, shiftMonth, timeToMin, todayStr } from '../src/shared/dates';
 
 const hashStr = (s) => {
   let h = 2166136261;
