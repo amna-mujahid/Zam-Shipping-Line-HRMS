@@ -209,7 +209,7 @@ and enforced by the backend.
 
 ```json
 {
-  "username": "657",
+  "username": "000",
   "password": "your_password"
 }
 ```
@@ -218,6 +218,17 @@ The server verifies credentials and retrieves the user's
 role from the database.
 
 ---
+
+### Local User Login (Demo Account)
+
+For local testing, use the following demo credentials:
+
+| Field | Value |
+|---|---|
+| Username | `657` |
+| Password | `657` |
+
+**Note:** These credentials are intended for local development and testing only. Change the demo password before using the application in a production environment.
 
 ## ⚙️ Installation & Setup
 
