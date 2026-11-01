@@ -6,3 +6,5 @@ coverage/
 *.log
 .env*
 .env.example
+# Frontend production config holds only the public backend URL
+!frontend/.env.production

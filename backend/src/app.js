@@ -24,6 +24,9 @@ export const createApp = () => {
     app.get('/', (req, res) => res.sendFile(path.join(dist, 'index.html')));
   }
 
+  // Health check for the API-only deployment (e.g. Vercel), so the root URL isn't "Cannot GET /".
+  app.get('/', (req, res) => res.json({ ok: true, service: 'ZAM HRMS API' }));
+
   app.use(errorHandler);
   return app;
 };
