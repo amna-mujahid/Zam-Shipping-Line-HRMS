@@ -1,137 +1,584 @@
-# Zam HRMS — Human Resource Management System
 
-```
+# 🏢 ZAM HRMS
+### Human Resource Management System
+
+<p align="center">
+  <strong>Employee Management | Attendance | Leave | Payroll</strong>
+</p>
+
+<p align="center">
+  React + Vite • Node.js • Express • MySQL
+</p>
+
+---
+
+## 📌 Project Overview
+
+ZAM HRMS is a full-stack Human Resource Management System
+developed to centralize and automate employee management,
+attendance tracking, leave management, and payroll processing.
+
+The system provides role-based access for HR, Department Heads,
+and Employees to ensure secure and controlled access to
+organizational information.
+
+## ✨ Key Features
+
+| Module | Features |
+|---|---|
+| 👥 Employee Management | Employee profiles and employment records |
+| 🕒 Attendance | Daily attendance, check-in/out, timesheets and corrections |
+| 🏖️ Leave Management | Leave applications, approvals and leave balances |
+| 💰 Payroll | Salary calculations, deductions, overtime and payslips |
+| 📊 Reports | Employee, attendance and payroll reports |
+| 🔐 User Management | Authentication and role-based permissions |
+| 📝 Audit Logging | Records changes and user activities |
+
+---
+
+## 🛠️ Technology Stack
+
+| Layer | Technology |
+|---|---|
+| Frontend | React + Vite |
+| Backend | Node.js + Express.js |
+| Database | MySQL 8 |
+| Authentication | Bearer Token |
+| Password Hashing | bcrypt |
+| Database Operations | MySQL Pool & Transactions |
+| Shared Logic | JavaScript |
+| Runtime | Node.js 20+ |
+
+---
+
+## 📁 Project Structure
+
+```text
 zam-shipping---fleet-hrms/
-├── frontend/   React + Vite web app (port 3000)
-├── backend/    Express API on MySQL (port 4000) + database scripts, .env
-├── database/   SQL files: your schema, extensions, demo seed
-└── shared/     Rules used by both: attendance, leave, payroll, dates, roles & permissions
+│
+├── frontend/                  # React + Vite application
+│
+├── backend/                   # Express API
+│   ├── scripts/
+│   │   ├── db-setup.js
+│   │   ├── db-seed.js
+│   │   └── sql-runner.js
+│   │
+│   ├── src/
+│   │   ├── config/
+│   │   ├── routes/
+│   │   ├── controllers/
+│   │   ├── middleware/
+│   │   ├── services/
+│   │   ├── repositories/
+│   │   ├── jobs/
+│   │   ├── utils/
+│   │   ├── app.js
+│   │   └── server.js
+│   │
+│   └── .env
+│
+├── database/
+│   ├── zam_hrms.sql
+│   ├── 02_extensions.sql
+│   └── 03_seed.sql
+│
+├── shared/
+│   ├── attendance/
+│   ├── leave/
+│   ├── payroll/
+│   ├── dates.js
+│   └── permissions.js
+│
+├── package.json
+└── README.md
 ```
 
-In development the frontend forwards every `/api` request to the backend, so you open only http://localhost:3000.
+---
 
-### Backend structure
+## 🏗️ System Architecture
 
+```mermaid
+flowchart TB
+    U["👤 User"]
+
+    subgraph FRONTEND["Frontend Layer"]
+        F["React + Vite<br/>Port 3000"]
+        UI["Dashboards • Forms • Reports"]
+    end
+
+    subgraph BACKEND["Backend Layer"]
+        API["Express API<br/>Port 4000"]
+        AUTH["Authentication & Authorization"]
+        SERVICE["Business Services"]
+        REPO["Repositories / SQL Queries"]
+    end
+
+    subgraph DATABASE["Database Layer"]
+        DB[("MySQL 8<br/>zam_hrms")]
+    end
+
+    U --> F
+    F --> UI
+    UI --> API
+    API --> AUTH
+    AUTH --> SERVICE
+    SERVICE --> REPO
+    REPO --> DB
+
+    DB --> REPO
+    REPO --> SERVICE
+    SERVICE --> API
+    API --> F
+
+    style FRONTEND fill:#e8f1ff,stroke:#3976c5,color:#16365f
+    style BACKEND fill:#e9f7ef,stroke:#32965d,color:#164b2c
+    style DATABASE fill:#fff2dc,stroke:#d99a35,color:#704514
 ```
-backend/
-├── scripts/                 db-setup.js, db-seed.js, sql-runner.js
-└── src/
-    ├── server.js            entry point: starts the HTTP server and background jobs
-    ├── app.js               Express app: JSON body, /api routes, error handler, frontend/dist in production
-    ├── config/              env.js (reads .env), database.js (MySQL pool, transactions)
-    ├── routes/              URL → controller (+ requireAuth): health, auth, state, actions
-    ├── controllers/         read the request, call a service, send the JSON response
-    ├── middleware/          auth.middleware.js (Bearer token → req.user), error.middleware.js (404 + errors)
-    ├── services/            business rules, one file per module: auth, state, employee, access,
-    │                        attendance, regularization, leave, organization, payroll, policy;
-    │                        action.service.js maps POST /api/actions/:name to these functions
-    ├── repositories/        all SQL, one file per table group (employee, attendance, leave, payroll, user, audit…)
-    ├── jobs/                background jobs (auto-absent every 10 minutes)
-    └── utils/               errors, validators, tokens, passwords, formatting, attendance-engine glue
+
+### Request Processing Flow
+
+Every request follows this sequence:
+
+```mermaid
+flowchart LR
+    A["Route"] --> B["Middleware"]
+    B --> C["Controller"]
+    C --> D["Service"]
+    D --> E["Repository"]
+    E --> F[("MySQL")]
+
+    style A fill:#dbeafe,stroke:#2563eb
+    style B fill:#e0e7ff,stroke:#6366f1
+    style C fill:#fef3c7,stroke:#d97706
+    style D fill:#dcfce7,stroke:#16a34a
+    style E fill:#fce7f3,stroke:#db2777
+    style F fill:#ffedd5,stroke:#ea580c
 ```
 
-A request flows **route → middleware → controller → service → repository → MySQL**. Each action runs in one transaction, checks permissions and writes an `audit_log` row.
+Each action executes inside a database transaction,
+checks permissions, and records changes in `audit_log`.
 
-| Endpoint | Purpose |
-|----------|---------|
-| `GET /api/health` | Database connectivity check |
-| `POST /api/auth/login` | `{ username, password }` → token + user. The role comes from the account in the database. |
-| `GET /api/auth/me` | Current user |
-| `GET /api/state` | Everything the user's role may see |
-| `POST /api/actions/:name` | `{ args: [...] }` — every change (e.g. `markAttendance`, `decideLeave`, `finalizePayroll`) |
+---
 
-## First-time setup
+## 🔐 User Roles & Permissions
 
-Prerequisites: Node.js 20+ and MySQL 8 (the `MySQL80` service).
+The application supports three primary roles.
 
-1. Open `backend/.env` and enter your MySQL password:
-   ```
-   DB_USER=root
-   DB_PASSWORD=your_mysql_password
-   ```
-2. From the **project root**, install packages and create the database. One `npm i` installs both frontend and backend:
-   ```bash
-   npm i
-   npm run db:setup     # runs database/zam_hrms.sql, then database/02_extensions.sql
-   npm run db:seed      # OPTIONAL demo data (employees 657 / 50401 / 50403 / 50404 / 50405, ~2 months of attendance)
-   npm run db:setup     # run again after seeding so the users rows in zam_hrms.sql get inserted
-   ```
-3. Start everything:
-   ```bash
-   npm run dev          # backend on :4000 + frontend on :3000 → open http://localhost:3000
-   ```
-   To run them separately, use `npm run dev:backend` and `npm run dev:frontend` in two terminals.
+```mermaid
+flowchart TB
+    ADMIN["HR"]
+    HEAD["Department Head"]
+    EMP["Employee"]
 
-`db:setup` is safe to run again; steps that were already applied are skipped. If your database already has real employees, skip `db:seed`.
+    ADMIN --> A["Full System Access"]
+    HEAD --> H["Attendance Management"]
+    HEAD --> L["First-Level Leave Approval"]
+    EMP --> E["Own Profile"]
+    EMP --> AT["Own Attendance"]
+    EMP --> LV["Own Leave"]
+    EMP --> PAY["Own Payslips"]
 
-## Database files
+    style ADMIN fill:#dcfce7,stroke:#16a34a
+    style HEAD fill:#dbeafe,stroke:#2563eb
+    style EMP fill:#fef3c7,stroke:#d97706
+```
 
-| File | Purpose |
-|------|---------|
-| `database/zam_hrms.sql` | Your schema, unchanged |
-| `database/02_extensions.sql` | Additive columns and tables the app needs: reporting manager, personal/emergency/bank details, check-in method, GPS location, breaks, correction check-out time, job history, payroll runs, settings, policy acknowledgements |
-| `database/03_seed.sql` | Optional demo rows (`INSERT IGNORE`, never overwrites) |
+| Role | Access |
+|---|---|
+| HR | Complete system access |
+| Department Head | Attendance management and first-level leave approval |
+| Employee | Own profile, attendance, leave and payslips |
 
-## Logins and roles
+Permissions are defined in `shared/permissions.js`
+and enforced by the backend.
 
-On the login screen you enter only `users.username` (or employee email) and password. The server checks the password and reads the account's role (HR, Department_Head or Employee) from the database, and that role decides which screens open. Plain-text passwords (such as `'657'` in zam_hrms.sql) are accepted once and then re-saved as bcrypt hashes.
+---
 
-| `roles.role_name` | App access |
-|-------------------|------------|
-| HR | **Owner**: everything |
-| Department_Head | **Manager**: attendance (daily attendance, P/A/L/HD marking, timesheets, corrections) plus first-level leave approval for employees who report to them. No salaries, payroll or personnel data. |
-| Employee | **Employee**: own attendance, payslips, leave, profile, policies |
+## 🔌 API Endpoints
 
-The role matrix is in `shared/permissions.js`. The server applies it to every request, so a role never receives data it may not see.
+| Method | Endpoint | Purpose |
+|---|---|---|
+| GET | `/api/health` | Database connectivity |
+| POST | `/api/auth/login` | User login |
+| GET | `/api/auth/me` | Current authenticated user |
+| GET | `/api/state` | Role-based application data |
+| POST | `/api/actions/:name` | Execute application actions |
 
-Demo logins after `db:seed`: `657 / 657` (HR), `50401 / 50401` (Department Head), `50403 / 50403` (Employee).
+### Login Request
 
-## Attendance marking
+```json
+{
+  "username": "657",
+  "password": "your_password"
+}
+```
 
-On **Daily Attendance**, HR and Department Heads can:
-- mark each person **P** (Present), **A** (Absent), **L** (Late) or **HD** (Half Day). The mark is stored in `attendance.status` with `is_manual = 1`;
-- click **Mark all as Present** to mark everyone who has no attendance yet for the date. Employees on approved leave, and anyone with attendance already recorded, are left unchanged;
-- use **Times** to enter an exact check-in and check-out. The status is then calculated from the employee's schedule (`late_after`, `half_day_after`).
+The server verifies credentials and retrieves the user's
+role from the database.
 
-## Attendance rules
+---
 
-Each employee follows the schedule of their designation. Example, Non Manager (08:45, late after 09:00, half day after 10:30, out 18:00):
+## ⚙️ Installation & Setup
 
-| Check-in | Status |
-|----------|--------|
-| up to 09:00 | Present |
-| 09:01 – 10:30 | Late |
-| after 10:30 (any time until the end of the day) | Half Day |
-| no check-in by 18:00 | **Absent** — written automatically |
+### Prerequisites
 
-The backend's auto-absent job runs at start-up and every 10 minutes. It writes `Absent` (method `Auto`) for working days with no attendance row. Off days, holidays, approved leave and days before joining are skipped. `AUTO_ABSENT_DAYS` in `backend/.env` sets how far back it looks (default 31; `0` turns it off). HR or the department head can still mark the person Present.
+- Node.js 20+
+- MySQL 8
+- MySQL Server service (`MySQL80`)
+- Git
 
-## Leave approval
-
-1. The employee applies. Working days are counted automatically (off days and holidays excluded).
-2. If the employee reports to a Department Head, that Department Head approves or rejects first (`manager_status`).
-3. **HR gives the final decision** (`hr_status`). HR can decide even while the department head's decision is still pending.
-4. On HR approval, every working day of the leave is written to `attendance` as **On Leave**, and a `leave_transactions` row is added.
-
-## Payroll (PKR)
-- **Pay period:** each month runs from the 26th to the 25th of the next month and is named after the month it ends in (November 2026 = 26 Oct – 25 Nov 2026). Payroll, timesheets, reports and the dashboard all use this period. To change the start day, edit `PAY_PERIOD_START_DAY` in `shared/dates.js`.
-- `employees.gross_salary` is the **monthly** gross. It is split into Basic 60%, House Rent 30% and Utility 10%.
-- Overtime is paid at 1.5x on working days and 2x on off days, with hourly rate = gross ÷ 176.
-- Loss of pay applies for absences, unpaid leave, half days, every 3 late arrivals (½ day), and days before joining.
-- Income tax uses the FBR salaried slabs (Finance Act 2025). EOBI is Rs 370 for the employee and Rs 1,850 for the employer.
-- All rates can be edited under **Payroll → Pay rules & tax**.
-- Finalizing a month stores the payslips in `payroll_run` and publishes them to employees.
-
-## Configuration
-
-- `frontend/src/config/offices.js` holds the office coordinates for GPS check-in. **Set your real office latitude and longitude.**
-- `backend/.env` holds the database connection, `AUTH_SECRET` (signs login sessions) and the API `PORT` (4000).
-
-## Production
+### 1. Clone the Repository
 
 ```bash
-npm run build        # builds frontend/dist
-npm start            # backend serves the API and frontend/dist on :4000
+git clone YOUR_REPOSITORY_URL
+cd zam-shipping---fleet-hrms
 ```
-#   Z a m - S h i p p i n g - L i n e - H R M S  
- 
+
+### 2. Configure Database Credentials
+
+Open `backend/.env` and configure:
+
+```env
+DB_HOST=localhost
+DB_PORT=3306
+DB_USER=root
+DB_PASSWORD=your_mysql_password
+DB_NAME=zam_hrms
+
+AUTH_SECRET=your_secure_secret
+PORT=4000
+```
+
+Use your actual MySQL password.
+Never upload `.env` to GitHub.
+
+### 3. Install Dependencies
+
+Run from the project root:
+
+```bash
+npm install
+```
+
+### 4. Create Database
+
+```bash
+npm run db:setup
+```
+
+This executes:
+
+- `database/zam_hrms.sql`
+- `database/02_extensions.sql`
+
+### 5. Optional Demo Data
+
+```bash
+npm run db:seed
+```
+
+Demo data includes employees:
+
+- 657
+- 50401
+- 50403
+- 50404
+- 50405
+
+After seeding, run:
+
+```bash
+npm run db:setup
+```
+
+This ensures the users defined in the main SQL file are inserted.
+
+**Important:** Skip demo seeding if your database already contains real employee records.
+
+### 6. Start the Application
+
+```bash
+npm run dev
+```
+
+Open:
+
+```text
+http://localhost:3000
+```
+
+### Run Frontend and Backend Separately
+
+Terminal 1:
+
+```bash
+npm run dev:backend
+```
+
+Terminal 2:
+
+```bash
+npm run dev:frontend
+```
+
+---
+
+## 🕒 Attendance Management
+
+HR and Department Heads can:
+
+- Mark Present (P)
+- Mark Absent (A)
+- Mark Late (L)
+- Mark Half Day (HD)
+- Mark all eligible employees Present
+- Enter check-in and check-out times
+- Review and correct attendance records
+
+### Attendance Rules
+
+Example: Non-Manager Schedule
+
+| Condition | Attendance Status |
+|---|---|
+| Check-in up to 09:00 | Present |
+| 09:01 – 10:30 | Late |
+| After 10:30 | Half Day |
+| No check-in by 18:00 | Absent |
+
+The automatic absence job runs at application startup
+and every 10 minutes.
+
+It skips:
+
+- Off days
+- Holidays
+- Approved leave
+- Dates before employee joining
+
+The `AUTO_ABSENT_DAYS` environment variable controls
+how far back the job checks for missing attendance.
+
+---
+
+## 🏖️ Leave Management
+
+### Leave Approval Workflow
+
+```mermaid
+flowchart TD
+    A["Employee Submits Leave Request"]
+    B["Department Head Review"]
+    C["HR Final Decision"]
+    D["Approved"]
+    E["Rejected"]
+    F["Update Attendance as On Leave"]
+    G["Create Leave Transaction"]
+
+    A --> B
+    B --> C
+    C -->|Approve| D
+    C -->|Reject| E
+    D --> F
+    F --> G
+
+    style A fill:#dbeafe,stroke:#2563eb
+    style C fill:#fef3c7,stroke:#d97706
+    style D fill:#dcfce7,stroke:#16a34a
+    style E fill:#fee2e2,stroke:#dc2626
+```
+
+1. Employee submits a leave request.
+2. Working days are calculated automatically.
+3. Department Head provides the first-level decision.
+4. HR makes the final decision.
+5. Approved leave updates attendance records.
+6. A leave transaction is recorded.
+
+HR can make the final decision even while the
+Department Head's decision is pending.
+
+Off days and holidays are excluded from working-day calculations.
+
+---
+
+## 💰 Payroll Management
+
+### Pay Period
+
+The company follows a monthly payroll period from
+the **26th of one month to the 25th of the next month**.
+
+Example:
+
+```text
+November 2026
+26 October 2026 → 25 November 2026
+```
+
+Payroll, timesheets, reports and dashboards use this period.
+
+The pay-period start day can be configured in:
+
+```javascript
+shared/dates.js
+
+export const PAY_PERIOD_START_DAY = 26;
+```
+
+### Salary Structure
+
+Monthly gross salary is divided into:
+
+| Component | Percentage |
+|---|---:|
+| Basic Salary | 60% |
+| House Rent | 30% |
+| Utility Allowance | 10% |
+| **Total** | **100%** |
+
+### Payroll Calculations
+
+- Overtime: 1.5x on working days.
+- Overtime: 2x on off days.
+- Hourly rate: Gross salary ÷ 176.
+- Loss of Pay: Absences, unpaid leave, half days,
+  every three late arrivals (half-day deduction),
+  and days before joining.
+- Income tax: FBR salaried slabs (Finance Act 2025).
+- Employee EOBI: Rs 370.
+- Employer EOBI: Rs 1,850.
+
+Payroll rules can be managed under:
+
+**Payroll → Pay Rules & Tax**
+
+### Payroll Finalization
+
+Finalizing a payroll period stores the generated
+payslips in `payroll_run` and publishes them to employees.
+
+---
+
+## 📊 Background Jobs
+
+The backend runs scheduled background tasks.
+
+| Job | Frequency | Purpose |
+|---|---|---|
+| Auto-Absent | Every 10 minutes | Records missing attendance for eligible working days |
+
+Configuration:
+
+```env
+AUTO_ABSENT_DAYS=31
+```
+
+Set `0` to disable the automatic absence job.
+
+---
+
+## 🗄️ Database Files
+
+| File | Description |
+|---|---|
+| `database/zam_hrms.sql` | Main database schema |
+| `database/02_extensions.sql` | Additional application tables and columns |
+| `database/03_seed.sql` | Optional demo records |
+
+The extension scripts include reporting manager,
+personal and emergency details, bank details,
+GPS check-in, breaks, job history, payroll runs,
+settings and policy acknowledgements.
+
+---
+
+## 🚀 Production Build
+
+Build the frontend:
+
+```bash
+npm run build
+```
+
+Start the production server:
+
+```bash
+npm start
+```
+
+The Express server serves the API and the compiled
+`frontend/dist` application on port `4000`.
+
+**Deployment note:** The production backend requires a
+reachable MySQL database and correctly configured environment
+variables. Vercel deployment of the frontend alone does not
+host a persistent Express server or MySQL database.
+
+---
+
+## 🔒 Security
+
+- Passwords are stored using bcrypt hashes.
+- Authentication uses Bearer Tokens.
+- Role-based authorization is enforced by the backend.
+- Database modifications use transactions.
+- Application changes are recorded in `audit_log`.
+- Database credentials and authentication secrets
+  must remain in environment variables.
+- `.env` files must never be committed to Git.
+
+---
+
+## 👨‍💻 Development Notes
+
+### Run Development Server
+
+```bash
+npm run dev
+```
+
+### Install Packages
+
+```bash
+npm install
+```
+
+### Initialize Database
+
+```bash
+npm run db:setup
+```
+
+### Seed Demo Data
+
+```bash
+npm run db:seed
+```
+
+### Build Frontend
+
+```bash
+npm run build
+```
+
+---
+
+## 📌 Important Configuration Files
+
+| File | Responsibility |
+|---|---|
+| `backend/.env` | Database credentials, API port and authentication secret |
+| `shared/dates.js` | Date and payroll-period calculations |
+| `shared/permissions.js` | Role-based permissions |
+| `frontend/src/config/offices.js` | GPS office coordinates |
+| `backend/src/config/database.js` | MySQL connection pool and transactions |
+| `backend/src/app.js` | Express application configuration |
+| `backend/src/server.js` | HTTP server and background jobs |
+
+---
+
+## 📄 License
+
+This project is developed for ZAM HRMS.
