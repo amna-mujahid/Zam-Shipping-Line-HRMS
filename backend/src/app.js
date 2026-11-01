@@ -21,7 +21,7 @@ export const createApp = () => {
     const dist = path.resolve(import.meta.dirname, '../../frontend/dist');
     if (!fs.existsSync(dist)) console.warn('  frontend/dist not found — run `npm run build` first.');
     app.use(express.static(dist));
-    app.get('*', (req, res) => res.sendFile(path.join(dist, 'index.html')));
+    app.get('/', (req, res) => res.sendFile(path.join(dist, 'index.html')));
   }
 
   app.use(errorHandler);
