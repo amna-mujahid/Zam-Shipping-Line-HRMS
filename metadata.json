@@ -1,0 +1,6 @@
+{
+  "name": "Zam Shipping - Fleet HRMS",
+  "description": "Maritime Enterprise HRMS & Fleet Operations Command Center for biometric attendance, crew muster, leave ledgers, statutory holiday scheduling, and audit compliance.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
