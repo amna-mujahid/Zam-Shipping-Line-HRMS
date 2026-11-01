@@ -2,7 +2,7 @@
 // Stored records only hold raw punches (in/out, breaks, capture method).
 // Everything else — status, worked hours, lateness, overtime, absences —
 // is derived here so payroll and reports always agree with the timesheet.
-import { dayName, isWeekend, nowTimeStr, timeToMin, todayStr } from './dates';
+import { dayName, isWeekend, nowTimeStr, timeToMin, todayStr } from './dates.js';
 
 export const STATUS_META = {
   PRESENT: { label: 'Present', cls: 'bg-emerald-50 text-emerald-700 border-emerald-200' },

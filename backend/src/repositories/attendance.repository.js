@@ -1,7 +1,7 @@
 // attendance + attendance_request (corrections).
 import { getCalendarId } from './reference.repository.js';
 import { hm, json } from '../utils/format.js';
-import { STATUS_FROM_DB, recordKey } from '../shared/attendance';
+import { STATUS_FROM_DB, recordKey } from '../shared/attendance.js';
 
 export const AUTO_METHOD = 'Auto';
 

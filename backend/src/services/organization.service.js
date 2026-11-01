@@ -6,7 +6,7 @@ import { audit } from '../repositories/audit.repository.js';
 import { fail } from '../utils/errors.js';
 import { nullIfEmpty } from '../utils/format.js';
 import { checkDate, checkTime, need } from '../utils/validators.js';
-import { PERMISSIONS as P } from '../shared/permissions';
+import { PERMISSIONS as P } from '../shared/permissions.js';
 
 // ---- holidays ---------------------------------------------------------------
 

@@ -3,7 +3,7 @@
 // Manager  – attendance (DB role: Department_Head): timesheets, marking, corrections; plus first-level
 //            approval of leave for employees who report to them. HR gives the final approval.
 // Employee – their own records only (attendance, payslips, leave, profile, policies).
-import { ROLES } from './roles';
+import { ROLES } from './roles.js';
 
 export const ROLE_LABELS = {
   [ROLES.OWNER]: 'Owner',

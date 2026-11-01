@@ -1,7 +1,7 @@
 // Payroll engine (Pakistan, monthly PKR). Turns an employee's monthly gross salary
 // (`employees.gross_salary`) plus the month's derived attendance into a payslip.
-import { computeRange, summarizeDays } from './attendance';
-import { monthDates } from './dates';
+import { computeRange, summarizeDays } from './attendance.js';
+import { monthDates } from './dates.js';
 
 export const DEFAULT_PAYROLL_SETTINGS = {
   basicPct: 60,

@@ -1,5 +1,5 @@
 // Glue between database reference data and the shared attendance engine.
-import { DB_STATUS, computeDay, recordKey } from '../shared/attendance';
+import { DB_STATUS, computeDay, recordKey } from '../shared/attendance.js';
 
 export const engineCtx = (ref, records = {}, leaves = []) => ({
   records,

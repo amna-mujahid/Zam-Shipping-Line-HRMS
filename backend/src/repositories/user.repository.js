@@ -1,7 +1,7 @@
 // users + roles (login accounts).
 import { pool } from '../config/database.js';
 import { fail } from '../utils/errors.js';
-import { ROLES } from '../shared/roles';
+import { ROLES } from '../shared/roles.js';
 
 const USER_SQL = `
   select u.user_id, u.employee_id, u.username, u.hash_password, u.is_active, r.role_name,

@@ -8,9 +8,9 @@ import { audit } from '../repositories/audit.repository.js';
 import { engineCtx } from '../utils/attendanceEngine.js';
 import { fail } from '../utils/errors.js';
 import { checkMonth, need } from '../utils/validators.js';
-import { PERMISSIONS as P } from '../shared/permissions';
-import { computePayrollRun } from '../shared/payroll';
-import { periodEnd, periodStart } from '../shared/dates';
+import { PERMISSIONS as P } from '../shared/permissions.js';
+import { computePayrollRun } from '../shared/payroll.js';
+import { periodEnd, periodStart } from '../shared/dates.js';
 
 export async function finalizePayroll(conn, user, monthKey) {
   need(user, P.PAYROLL_RUN);

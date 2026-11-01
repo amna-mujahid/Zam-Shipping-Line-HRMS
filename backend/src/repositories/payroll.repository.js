@@ -1,6 +1,6 @@
 // payroll_run + app_settings('payroll').
 import { pool } from '../config/database.js';
-import { DEFAULT_PAYROLL_SETTINGS } from '../shared/payroll';
+import { DEFAULT_PAYROLL_SETTINGS } from '../shared/payroll.js';
 
 export const loadPayrollSettings = async (conn = pool) => {
   const [[row]] = await conn.query("select setting_value from app_settings where setting_key = 'payroll'");

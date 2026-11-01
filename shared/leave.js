@@ -1,6 +1,6 @@
 // Leave rules driven by the `leave_type` table (grant_method, max_limit, applicable_after_probation).
-import { findHoliday, isOffDay, isUnpaidLeaveType } from './attendance';
-import { dateRange, parseDate } from './dates';
+import { findHoliday, isOffDay, isUnpaidLeaveType } from './attendance.js';
+import { dateRange, parseDate } from './dates.js';
 
 // Working days between two dates: excludes calendar off days and holidays.
 export const countWorkingDays = (from, to, ctx) =>

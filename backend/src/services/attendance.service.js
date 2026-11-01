@@ -6,9 +6,9 @@ import { audit } from '../repositories/audit.repository.js';
 import { dbStatusForPunches } from '../utils/attendanceEngine.js';
 import { fail } from '../utils/errors.js';
 import { checkDate, checkTime, need, toEmployeeId } from '../utils/validators.js';
-import { PERMISSIONS as P } from '../shared/permissions';
-import { DB_STATUS } from '../shared/attendance';
-import { minToTime, nowTimeStr, timeToMin, todayStr } from '../shared/dates';
+import { PERMISSIONS as P } from '../shared/permissions.js';
+import { DB_STATUS } from '../shared/attendance.js';
+import { minToTime, nowTimeStr, timeToMin, todayStr } from '../shared/dates.js';
 
 const CHECK_IN_METHODS = ['Biometric', 'GPS', 'Web'];
 const MARKABLE = { PRESENT: DB_STATUS.PRESENT, ABSENT: DB_STATUS.ABSENT, LATE: DB_STATUS.LATE, HALF_DAY: DB_STATUS.HALF_DAY };

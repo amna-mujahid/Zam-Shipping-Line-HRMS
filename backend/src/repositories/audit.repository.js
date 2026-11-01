@@ -1,8 +1,8 @@
 // audit_log.
 import crypto from 'crypto';
 import { json } from '../utils/format.js';
-import { roleFromDb } from '../shared/roles';
-import { ROLE_LABELS } from '../shared/permissions';
+import { roleFromDb } from '../shared/roles.js';
+import { ROLE_LABELS } from '../shared/permissions.js';
 
 export const audit = (conn, user, action, table, recordId, reason, oldValue = null, newValue = null) =>
   conn.query(

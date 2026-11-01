@@ -1,6 +1,6 @@
 // Input checks shared by the services. Each throws an ActionError with a readable message.
 import { fail } from './errors.js';
-import { hasPermission } from '../shared/permissions';
+import { hasPermission } from '../shared/permissions.js';
 
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 const TIME_RE = /^\d{2}:\d{2}$/;
