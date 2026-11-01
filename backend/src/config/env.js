@@ -22,5 +22,7 @@ export const env = {
     user: process.env.DB_USER || 'root',
     password: process.env.DB_PASSWORD || '',
     database: process.env.DB_NAME || 'zam_hrms',
+    // Managed hosts like Aiven require TLS; set DB_SSL=true to enable.
+    ...(process.env.DB_SSL === 'true' && { ssl: { rejectUnauthorized: false } }),
   },
 };
