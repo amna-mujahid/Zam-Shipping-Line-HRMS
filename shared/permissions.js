@@ -78,7 +78,7 @@ export const VIEWS = [
   { id: 'my-payslips', label: 'My Payslips', icon: 'receipt', section: 'MY SELF-SERVICE', any: [P.PAYSLIP_SELF], roles: [ROLES.EMPLOYEE] },
   { id: 'leave', label: 'Leave Management', icon: 'event_available', section: 'LEAVE', any: [P.LEAVE_ALL, P.LEAVE_TEAM, P.LEAVE_SELF], selfLabel: 'My Leave', badgeKey: 'pendingLeaves' },
   { id: 'holidays', label: 'Company Holidays', icon: 'celebration', section: 'LEAVE', any: [P.HOLIDAYS] },
-  { id: 'my-profile', label: 'My Profile', icon: 'person', section: 'MY SELF-SERVICE', any: [P.PROFILE_SELF], roles: [ROLES.EMPLOYEE] },
+  { id: 'my-profile', label: 'My Profile', icon: 'person', section: 'MY SELF-SERVICE', any: [P.PROFILE_SELF] },
   { id: 'policies', label: 'Company Policies', icon: 'menu_book', section: 'MY SELF-SERVICE', any: [P.POLICIES] },
   { id: 'reports', label: 'Reports & Analytics', icon: 'analytics', section: 'GOVERNANCE', any: [P.REPORTS] },
   { id: 'audit-log', label: 'Audit Trail', icon: 'shield', section: 'GOVERNANCE', any: [P.AUDIT_LOG] },
