@@ -5,16 +5,19 @@ import express from 'express';
 import { env } from './config/env.js';
 import apiRoutes from './routes/index.js';
 import { errorHandler } from './middleware/error.middleware.js';
+import { cors } from './middleware/cors.middleware.js';
 
 export const createApp = () => {
   const app = express();
   app.disable('x-powered-by');
+  app.use(cors);
   app.use(express.json({ limit: '1mb' }));
 
   app.use('/api', apiRoutes);
 
   // In production the backend also serves the built frontend, so one process is enough.
-  if (env.isProd) {
+  // On Vercel the frontend is its own deployment, so there is no dist to serve.
+  if (env.isProd && !process.env.VERCEL) {
     const dist = path.resolve(import.meta.dirname, '../../frontend/dist');
     if (!fs.existsSync(dist)) console.warn('  frontend/dist not found — run `npm run build` first.');
     app.use(express.static(dist));
@@ -24,3 +27,6 @@ export const createApp = () => {
   app.use(errorHandler);
   return app;
 };
+
+// Vercel runs the backend as a serverless function and expects the app as the default export.
+export default createApp();

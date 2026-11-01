@@ -1,5 +1,9 @@
 const TOKEN_KEY = 'hrms.token';
 
+// Backend URL when it lives on another domain (set VITE_API_URL at build time).
+// Empty means same origin: the Vite proxy in dev, or a /api rewrite in production.
+const API_URL = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '');
+
 export const getToken = () => {
   try { return localStorage.getItem(TOKEN_KEY); } catch { return null; }
 };
@@ -14,7 +18,7 @@ const request = async (path, { method = 'GET', body } = {}) => {
   const token = getToken();
   let res;
   try {
-    res = await fetch(path, {
+    res = await fetch(API_URL + path, {
       method,
       headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
       body: body === undefined ? undefined : JSON.stringify(body),

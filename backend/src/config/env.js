@@ -16,6 +16,8 @@ export const env = {
   authSecret,
   tokenTtlMs: 12 * 60 * 60 * 1000,
   autoAbsentDays: Number(process.env.AUTO_ABSENT_DAYS ?? 31),
+  // Comma-separated frontend URLs allowed to call the API from another domain.
+  corsOrigins: (process.env.CORS_ORIGIN || '').split(',').map((o) => o.trim().replace(/\/$/, '')).filter(Boolean),
   db: {
     host: process.env.DB_HOST || '127.0.0.1',
     port: Number(process.env.DB_PORT || 3306),
